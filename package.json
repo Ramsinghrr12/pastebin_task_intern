@@ -1,0 +1,17 @@
+{
+  "name": "pastebin-lite-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pastebin-Lite MERN app (backend + frontend)",
+  "scripts": {
+    "postinstall": "npm install --prefix backend && npm install --prefix frontend",
+    "start": "npm start --prefix backend",
+    "dev": "npm run dev --prefix backend",
+    "start:backend": "npm start --prefix backend",
+    "start:frontend": "npm start --prefix frontend",
+    "build:frontend": "npm run build --prefix frontend"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
