@@ -64,7 +64,17 @@ router.post(
 
       await paste.save();
 
-      const baseUrl = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+      // Determine base URL: use BASE_URL env var, or derive from request, or fallback to localhost
+      let baseUrl = process.env.BASE_URL;
+      
+      if (!baseUrl) {
+        // In production, use the request host
+        // Check for X-Forwarded-Proto header (used by Render/proxies)
+        const protocol = req.get('x-forwarded-proto') || req.protocol || 'https';
+        const host = req.get('host') || req.get('x-forwarded-host') || `localhost:${process.env.PORT || 5000}`;
+        baseUrl = `${protocol}://${host}`;
+      }
+      
       const url = `${baseUrl}/p/${id}`;
 
       res.status(201).json({
