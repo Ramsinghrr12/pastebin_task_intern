@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+// If REACT_APP_API_URL is not set, use relative paths (same origin)
+const API_URL = process.env.REACT_APP_API_URL || '';
 
 function CreatePaste() {
   const [content, setContent] = useState('');

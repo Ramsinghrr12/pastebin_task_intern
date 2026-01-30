@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -27,10 +28,24 @@ mongoose.connect(MONGODB_URI)
     console.error('MongoDB connection error:', err);
   });
 
-// Routes
+// API & HTML routes
 app.use('/api/pastes', require('./routes/pastes'));
 app.use('/api/healthz', require('./routes/healthz'));
 app.use('/p', require('./routes/view'));
+
+// Serve React frontend (built files) from ../frontend/build
+const frontendBuildPath = path.join(__dirname, '..', 'frontend', 'build');
+
+app.use(express.static(frontendBuildPath));
+
+// Fallback: for any non-API route that isn't /p/*, serve index.html
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api') || req.path.startsWith('/p/')) {
+    return next();
+  }
+
+  return res.sendFile(path.join(frontendBuildPath, 'index.html'));
+});
 
 // Start server
 app.listen(PORT, () => {
